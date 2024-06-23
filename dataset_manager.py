@@ -12,9 +12,11 @@ class DatasetManager:
 
     def __init__(self, url: str, destination_folder: Path):
         self.url = url
-        if not destination_folder.is_dir():
+        if not destination_folder.is_dir() or not destination_folder.exists():
             raise ValueError(
-                f"destination_folder must be a directory: {destination_folder}"
+                "destination_folder must be an existing directory: {}".format(
+                    destination_folder
+                )
             )
         self.destination_folder = destination_folder
 
@@ -36,9 +38,9 @@ class DatasetManager:
         return True
 
     def extract(self) -> bool:
-        logger.info(
-            f"extracting dataset: destination_folder={self.destination_folder}"
-            )
+        logger.info("extracting dataset: destination_folder={}".format(
+            self.destination_folder
+        ))
         try:
             with tarfile.open(
                     self.destination_folder / self.DATASET_FILENAME,
@@ -52,7 +54,8 @@ class DatasetManager:
 
 if __name__ == "__main__":
     url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
-    destination_folder = Path(__file__) / "data"
+    destination_folder = (Path(__file__).parent / "data").resolve()
+    destination_folder.mkdir(parents=True, exist_ok=True)
     dataset_manager = DatasetManager(url, destination_folder)
     if dataset_manager.download() and dataset_manager.extract():
         print("Download and extraction complete.")
