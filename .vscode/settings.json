@@ -1,0 +1,10 @@
+{
+
+    "cSpell.ignoreWords": [
+        "venv"
+    ],
+    "cSpell.words": [
+        "cifar",
+    ],
+    "python.languageServer": "None",
+}
